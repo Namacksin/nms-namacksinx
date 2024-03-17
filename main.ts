@@ -1,0 +1,9 @@
+import("./scripts/back");
+import("./scripts/clan");
+import("./scripts/clear");
+import("./scripts/effect");
+import("./scripts/home");
+import("./scripts/kill");
+import("./scripts/teleport");
+import("./scripts/tpa")
+import("./scripts/chatcustom/chat");
