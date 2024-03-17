@@ -2,10 +2,9 @@ import { PlayerCommandSelector } from "bdsx/bds/command";
 import { command } from "bdsx/command";
 import { CommandBoolean } from "../setting";
 import { events } from "bdsx/event";
-import { CustomForm, Form, FormButton, FormDataCustom, SimpleForm } from "bdsx/bds/form";
+import { FormButton, SimpleForm } from "bdsx/bds/form";
 import { Fs } from "./db";
 import { bedrockServer } from "bdsx/launcher";
-import { NetworkIdentifier } from "bdsx/bds/networkidentifier";
 
 let TpaRequestObject: Record<string, RequestData> = {};
 
@@ -41,27 +40,6 @@ class TpaSetting {
 };
 
 class TpaCommand {
-
-    public static async sendcheckrequestform(ni: NetworkIdentifier, array: string[]): Promise<void> {
-        const form = await Form.sendTo(ni, {
-            title: "§l§8[ §f티피 요청함 §8]",
-            type: "custom_form",
-            content: [
-                {
-                    type: "dropdown",
-                    text: "§l§8티피 요청함.",
-                    options: array
-                }
-            ]  
-        });
-        if (form === null) return;
-        const requestName = array[form[0]];
-        const entity = ni.getActor()!;
-        const requestob: RequestData = Fs.getValue(path, entity.getXuid());
-        const request: TpaData = requestob.requests[requestName];
-        const simpleform = new SimpleForm("§l§8[ §f티피 요청 §8]", `§8요청 플레이어 : ${request.requestperson}\n§8요청 타입 " ${request.tpatype}`);
-    };
-
     public static MakeTpaCommand(): void {
         command.register("티피", "티피요청을 합니다.").overload((param, origin, output) => {
             const entity = origin.getEntity();
@@ -222,13 +200,6 @@ class TpaCommand {
                 entity.sendMessage("§atptoggle, tpauto를 사용중인 플레이어을 제외한 모든 플레이어에게 TPA요청을 보냈습니다.")
                 player.sendMessage(`§e${entity.getName()}님에게 TPA 요청이 왔습니다.`);
             },{ });
-        },{});
-
-        command.register("티피요청함", "자신에게 온 티피 요청들을 확인합니다.").overload((param, origin) => {
-            const entity = origin.getEntity();
-            if (!entity?.isPlayer()) return;
-            const requests = Object.keys(TpaRequestObject);
-            TpaCommand.sendcheckrequestform(entity.getNetworkIdentifier(), requests);
         },{});
     };
 
